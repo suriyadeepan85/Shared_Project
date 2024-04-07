@@ -48,8 +48,19 @@ pipeline {
                 }
             }
         }
+        stage ("5. Code Quality scan")  {
+            steps {
+                script {
+                    withSonarQubeEnv('Sonarqube') {
+                        dir ("DevopsProject1"){
+                           sh "mvn clean verify sonar:sonar -Dsonar.projectKey=jenkins-project -Dsonar.projectName='jenkins-project'"
+                        }
+                    }
+                }
+            }
+        }
 
-        stage("5. Maven Integration Test") {
+        stage("6. Maven Integration Test") {
             //  Test the interaction between different units of code
             steps{
                 dir ("DevopsProject1"){
@@ -58,7 +69,7 @@ pipeline {
             }
         }
 
-        stage('6. Docker Image Build') {
+        stage('7. Docker Image Build') {
             // Build Docker Image 
             steps{
                 dir('DevopsProject1') {      // go to directory where 'Dockerfile' is stored
@@ -70,7 +81,7 @@ pipeline {
             }
         }
         
-        stage('7. Docker Image Tag') {
+        stage('8. Docker Image Tag') {
             // Rename the Docker Image before pushing to Dockerhub
             steps{
                 dir('DevopsProject1') {      // go to directory where Docker Image is created
@@ -83,7 +94,7 @@ pipeline {
             } 
         }
 
-        stage('8. Trivy Image Scan') {
+        stage('9. Trivy Image Scan') {
             // Scan Docker images for vulnerabilities 
             steps{
                 script { 
@@ -93,7 +104,7 @@ pipeline {
             }
         }
 
-        stage('9. Docker Image Push') {
+        stage('10. Docker Image Push') {
             // Login to Dockerhub & Push the image to Dockerhub
             steps{
                 script { 
@@ -107,7 +118,7 @@ pipeline {
             }
         }
 
-        stage('10. Docker Image Cleanup') {
+        stage('11. Docker Image Cleanup') {
             // Remove the unwanted (dangling) images created in Jenkins Server to free-up space
             steps{
                 script { 
