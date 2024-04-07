@@ -127,6 +127,7 @@ resource "aws_instance" "my_ec2_instance1" {
   }
 }
 
+
 # STEP3: OUTPUT PUBLIC IP OF EC2 INSTANCE
 output "ACCESS_YOUR_JENKINS_HERE" {
   value = "http://${aws_instance.my_ec2_instance1.public_ip}:8080"
